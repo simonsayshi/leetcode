@@ -1,0 +1,72 @@
+class TrieNode{
+public:
+    bool isWord;
+    TrieNode* children[26];
+    
+    TrieNode() {
+        isWord = false;
+        for(int i = 0; i < 26;i ++ ){
+            children[i] = NULL;
+        }
+    }
+};
+
+class Solution {
+public:
+    vector<string> findWords(vector<vector<char>>& board, vector<string>& words) {
+        TrieNode* root = new TrieNode();
+        unordered_set<string> wordSet;
+        vector<string> res;
+        for(auto word:words) {
+            insert(word, root);
+        }
+        
+        for(int i = 0;i < board.size();i++) {
+            for(int j = 0;j < board[0].size();j++) {
+                int k = board[i][j] - 'a';
+                if(root->children[k] != NULL) {
+                    string curStr = "";
+                    TrieNode* temp = root;
+                    dfs(board, i, j, temp, curStr, wordSet);
+                }
+            }
+        }
+        for(auto a:wordSet) {
+            res.push_back(a);
+        }
+        return res;
+    }
+    
+    void dfs(vector<vector<char>>& board, int i, int j, TrieNode* temp, string curStr, unordered_set<string>&wordSet) {
+        if(i < 0 || i >= board.size() || j < 0 || j >=board[0].size() || board[i][j] == '#' ||temp->children[board[i][j] - 'a'] == NULL)
+            return;
+        curStr += board[i][j];   
+        temp = temp->children[board[i][j] - 'a'];
+        if(temp->isWord)
+            wordSet.insert(curStr);
+        char tempChar = board[i][j];
+        board[i][j] = '#';
+        dfs(board, i + 1, j , temp, curStr, wordSet);
+        dfs(board, i - 1, j , temp, curStr, wordSet);
+        dfs(board, i, j + 1, temp, curStr, wordSet);
+        dfs(board, i , j - 1, temp, curStr, wordSet);
+        board[i][j] = tempChar;
+        return;
+    }
+    
+    void insert(string&word, TrieNode* root) {
+        int size = word.size();
+        TrieNode* temp = root;
+        
+        for(int i = 0;i < size;i++) {
+            int k = word[i] - 'a';
+            if(temp->children[k] == NULL) {
+                temp->children[k] = new TrieNode();
+            }
+            temp = temp->children[k];
+        }
+        temp->isWord = true;
+        return;
+    }
+    
+};
