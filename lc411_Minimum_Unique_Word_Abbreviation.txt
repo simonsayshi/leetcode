@@ -1,0 +1,59 @@
+class Solution {
+public:
+    string minAbbreviation(string target, vector<string>& dictionary) {
+        if(dictionary.empty()) return to_string(target.size());
+        priority_queue<pair<int, string>, vector<pair<int, string>>, greater<pair<int, string>>> q;
+        q.push({target.size(), target});
+        getAbbr(target, 0, q);
+        while(!q.empty()) {
+            auto t = q.top();
+            q.pop();
+            bool noConflict = true; 
+            for(auto word:dictionary) {
+                if(isValidAbb(word, t.second)) {
+                    noConflict = false;
+                    break;
+                }
+            }
+            if(noConflict)
+                return t.second;
+        }
+        return "";
+        
+    }
+    
+    void getAbbr(string word, int pos,  priority_queue<pair<int, string>, vector<pair<int, string>>, greater<pair<int, string>>> &q) {
+        for(int i = pos; i < word.size();i++ ) {
+            for(int j = 1; i + j <= word.size();j++ ) {
+                string t = word.substr(0, i);
+                t += to_string(j) + word.substr(i + j);
+                q.push({t.size(), t});
+                getAbbr(t, i + 1 +  to_string(j).size(),q);
+            }
+        }
+        return;
+    }
+    
+    
+    bool isValidAbb(string& word, string& abbr) {
+        int wordP = 0, abbrP = 0;
+        while(wordP < word.size() && abbrP < abbr.size()) {
+            if(abbr[abbrP] >= '0' && abbr[abbrP] <= '9') {
+                if(abbr[abbrP] == '0') {
+                    return false;
+                }
+                int cnt = 0;
+                while(abbrP < abbr.size() && abbr[abbrP] >= '0' && abbr[abbrP] <= '9') {
+                    cnt = 10 * cnt + abbr[abbrP++] - '0';
+                }
+                wordP += cnt;
+            } else {
+                if(word[wordP++] != abbr[abbrP++]) {
+                    return false;
+                }
+            }
+            
+        }
+        return wordP == word.size() && abbrP == abbr.size();
+    }
+};
