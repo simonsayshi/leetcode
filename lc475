@@ -1,0 +1,66 @@
+class TrieNode {
+public:
+    bool isWord;
+    TrieNode* child[27];
+    int indx;
+    TrieNode() {
+        indx = 0;
+        for(int i  = 0; i < 27;i++) {
+            child[i] = NULL;
+        }
+    }
+};
+class WordFilter {
+public:
+    WordFilter(vector<string>& words) {
+        root = new TrieNode();
+        
+        for(int i = 0;i < words.size();i++) {
+            string word = words[i];
+            string key = "{" + word;
+            insert(key, i, root);
+            for(int j = 0; j < word.size();j++) {
+                key = word[word.size() - j - 1] + key;
+                insert(key, i , root);
+            }
+        }
+    }
+    
+    void insert(string&key, int index, TrieNode*root) {
+        TrieNode* cur = root;
+        for(int i = 0; i < key.length();i++) {
+            int k = key[i] - 'a';
+            if(cur->child[k] == NULL) {
+                cur->child[k] = new TrieNode();
+            }
+            cur->indx = index;
+            cur = cur->child[k];
+        }
+        cur->indx = index;
+        return;
+    }
+    int f(string prefix, string suffix) {
+        string key = suffix + '{' + prefix;
+        return find(key, root);
+    }
+    
+    int find(string key, TrieNode*root) {
+        TrieNode* cur = root;
+  
+        for(int i = 0;i < key.size();i++) {
+            int k = key[i] - 'a';
+            if(cur->child[k] == NULL)
+                return -1;
+            cur = cur->child[k];
+        }
+        return cur->indx;
+    }
+private:
+    TrieNode* root;
+};
+
+/**
+ * Your WordFilter object will be instantiated and called as such:
+ * WordFilter* obj = new WordFilter(words);
+ * int param_1 = obj->f(prefix,suffix);
+ */
