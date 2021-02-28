@@ -1,0 +1,34 @@
+class Solution {
+public:
+    vector<string> generatePalindromes(string s) {
+        vector<string> res;
+        unordered_map<char, int> m;
+        string t = "", mid = "";
+        for (auto a : s) ++m[a];
+        for (auto &it : m) {
+            if (it.second % 2 == 1) mid += it.first;
+            it.second /= 2;
+            t += string(it.second, it.first);
+            if (mid.size() > 1) return {};
+        }
+        permute(t, m, mid, "", res);
+        return res;
+    }
+    
+    void permute(string& t, unordered_map<char, int>m, string mid, string temp, vector<string> &res) {
+        if(temp.size() == t.size()) {
+            res.push_back(temp + mid + string(temp.rbegin(), temp.rend()));
+            return;
+        }
+        for(auto p : m) {
+            if(p.second > 0) {
+                m[p.first]--;
+                temp+=p.first;
+                permute(t,m,mid,temp,res);
+                m[p.first]++;
+                temp.pop_back();
+            }
+        }
+        return;
+    }
+};
