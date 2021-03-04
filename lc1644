@@ -1,0 +1,37 @@
+class Solution {
+public:
+    TreeNode* lowestCommonAncestor(TreeNode* root, TreeNode* p, TreeNode* q) {
+        bool qExist = false, pExist = false;
+        TreeNode* res = helper(root, p,q, qExist, pExist);
+        return (qExist && pExist) ? res : NULL;
+    }
+    TreeNode* helper(TreeNode* root, TreeNode*p, TreeNode*q, bool&qExist, bool&pExist) {
+        if(!root)
+            return NULL;
+        
+        if(root == p) {
+            pExist = true;
+        }
+        if(root == q) {
+            qExist = true;
+        }
+        
+        TreeNode* left = helper(root->left, p,q,qExist, pExist);
+        TreeNode* right = helper(root->right,p,q,qExist, pExist);
+        if(root == p || root == q) {
+            return root;
+        }
+        
+        if(left && right) {
+            return root;
+        }
+
+        if(left)
+            return left;
+        if(right)
+            return right;
+        
+        return NULL;
+        
+    }
+};
