@@ -1,0 +1,25 @@
+class Solution {
+public:
+    Node* lowestCommonAncestor(Node* p, Node * q) {
+        unordered_set<Node*> s;
+        Node* res;
+        return helper(p,q,s,res);
+    }
+    
+    Node* helper(Node*p, Node*q, unordered_set<Node*>&s, Node* res) {
+        
+        while(p) {
+            s.insert(p);
+            p = p->parent;
+        }
+        
+        while(q) {
+            if(s.count(q)) {
+                
+                return q;
+            }
+            q=q->parent;
+        }
+        return NULL;  
+    }
+};
