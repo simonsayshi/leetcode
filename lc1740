@@ -1,0 +1,47 @@
+class Solution {
+public:
+    int findDistance(TreeNode* root, int p, int q) {
+        TreeNode* theNode = lca(root,p,q);
+        int left = findDist(theNode,p,0);
+        int right = findDist(theNode,q,0);
+        return left + right;
+    }
+    
+    int findDist(TreeNode* parent, int target,int dist) {
+        if(parent==NULL)
+            return 0;
+        if(parent->val==target)
+            return dist;
+        int left = findDist(parent->left,target,1+dist);
+        int right = findDist(parent->right,target,1+dist);
+        
+        return max(left,right);
+    }
+    
+
+    TreeNode* lca(TreeNode*root, int p, int q) {
+        if(!root) {
+            return NULL;
+        }
+        
+        if(root->val == p || root->val ==q) {
+            return root;
+        }
+        
+        TreeNode* left = lca(root->left,p,q);
+        TreeNode* right =lca(root->right, p ,q);
+        
+        if(left && right) {
+            return root;
+        }
+        
+        if(left) {
+            return left;
+        }
+        if(right) {
+            return right;
+        }
+        return NULL;
+    }
+    
+};
