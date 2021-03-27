@@ -1,0 +1,21 @@
+class Solution {
+public:
+    int balancedString(string s) {
+        unordered_map<char, int> m;
+        int flag = (int)s.size() / 4, indx = 0;
+        int res = INT_MAX;
+        for(auto ch:s) {
+            m[ch]++;
+        }
+        for(int j = 0; j < s.size();j++) {
+            m[s[j]]--;
+            while(indx < s.size() && m['W'] <= flag && m['Q'] <= flag && m['E'] <= flag && m['R'] <= flag) {
+                res = min(res, j - indx + 1);
+                m[s[indx++]]++;
+            }
+        }
+        
+        
+        return res;
+    }
+};
