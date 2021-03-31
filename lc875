@@ -1,0 +1,26 @@
+class Solution {
+public:
+    int minEatingSpeed(vector<int>& piles, int H) {
+        int left = 1, right = *max_element(piles.begin(), piles.end());
+        
+        while(left + 1 < right) {
+            int tempk = left + (right - left) / 2;
+            int tempTotalHours = calHours(piles, tempk);
+            if(tempTotalHours > H) {
+                left = tempk;
+            } else {
+                right = tempk;
+            }
+        }
+        return calHours(piles, left) < H ? left:right;
+        
+    }
+    
+    int calHours(vector<int>& piles, const int tempk) {
+        int totalHours = 0;
+        for(auto p:piles) {
+            totalHours += p % tempk == 0 ? (p / tempk) : (p / tempk + 1);
+        }
+        return totalHours;
+    }
+};
