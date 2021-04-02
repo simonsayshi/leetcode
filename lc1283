@@ -1,0 +1,25 @@
+class Solution {
+public:
+    int smallestDivisor(vector<int>& nums, int threshold) {
+        int left = 1, right = *max_element(nums.begin(), nums.end());
+        
+        while(left + 1 < right) {
+            int mid = left +  (right - left) /2;
+            if(cal(nums, mid) <= threshold) {
+                right = mid;
+            } else {
+                left = mid;
+            }
+        }
+        int a = cal(nums, left);
+        return a <= threshold ? left : right;
+    }
+    
+    int cal(vector<int>nums, int mid) {
+        int res = 0;
+        for(auto a : nums) {
+            res += a % mid == 0 ? a / mid : (a / mid  + 1);
+        }
+        return res;
+    }
+};
