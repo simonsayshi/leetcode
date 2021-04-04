@@ -1,0 +1,31 @@
+class Solution {
+public:
+    int shipWithinDays(vector<int>& weights, int D) {
+        int maxLoad = accumulate(weights.begin(), weights.end(),0); 
+        int minLoad = max(maxLoad/D, *max_element(weights.begin(), weights.end()));//必须保证load至少能carry所有weights
+        
+        
+        while(minLoad + 1 < maxLoad) {
+            int midLoad = minLoad + (maxLoad - minLoad) / 2;
+            if(cal(weights, midLoad) <= D ) {
+                maxLoad = midLoad;
+            } else {
+                minLoad = midLoad;
+            }
+        }
+        return cal(weights, minLoad) <= D ? minLoad : maxLoad;
+    }
+    
+    int cal(const vector<int> weights, const int load) {
+        int res = 1, curSum = 0;
+        for(int i = 0; i < weights.size();i++) {
+            curSum += weights[i];
+            if(curSum > load) {
+                curSum = weights[i];
+                res++;
+            }
+            
+        }
+        return res;
+    }
+};
