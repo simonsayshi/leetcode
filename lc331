@@ -1,0 +1,19 @@
+class Solution {
+public:
+    bool isValidSerialization(string preorder) {
+	int degree = 1;
+	string temp;
+	stringstream ss;
+	ss << preorder;
+        //every node is a value with two different
+	while (getline(ss, temp, ',')) {
+		degree--;
+		if (degree < 0)
+			return false;
+		if (temp[0] != '#')
+			degree += 2;
+	}
+	return degree == 0;
+        
+    }
+};
