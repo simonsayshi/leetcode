@@ -1,0 +1,85 @@
+class RandomizedCollection {
+public:
+    /** Initialize your data structure here. */
+    RandomizedCollection() {
+        
+    }
+    
+    /** Inserts a value to the collection. Returns true if the collection did not already contain the specified element. */
+    bool insert(int val) {
+        nums.push_back(val);
+        m[val].insert(nums.size() - 1);
+        return m[val].size() == 1;
+    }
+    
+    /** Removes a value from the collection. Returns true if the collection contained the specified element. */
+    bool remove(int val) {
+        if(m[val].empty()){
+            return false;
+        }
+      
+        int lastItem = nums.back();
+        int lastIndex = nums.size() - 1;
+        
+        int curValIndx = *m[val].begin();
+        m[val].erase(curValIndx);
+        if(curValIndx != nums.size() - 1) {
+            m[lastItem].erase(lastIndex);
+            m[lastItem].insert(curValIndx);
+            nums[curValIndx] = lastItem;
+        }
+        nums.pop_back();
+        return true;
+    }
+    
+    /** Get a random element from the collection. */
+    int getRandom() {
+        return nums[rand() % nums.size()];
+    }
+    
+    
+private:
+    unordered_map<int,unordered_set<int>> m; // map<val, indxes>
+    vector<int> nums;
+};
+
+/**
+ * Your RandomizedCollection object will be instantiated and called as such:
+ * RandomizedCollection* obj = new RandomizedCollection();
+ * bool param_1 = obj->insert(val);
+ * bool param_2 = obj->remove(val);
+ * int param_3 = obj->getRandom();
+ 
+ 
+ 
+ 
+     bool insert(int val) {
+        nums.push_back(val);
+        m[val].insert(nums.size() -1);
+        return m[val].size() == 1;
+    }
+    
+    
+    
+    
+     bool remove(int val) {
+        if(m[val].empty())
+            return false;
+        
+        int curValIndex = *m[val].begin();
+        m[val].erase(curValIndex);
+        
+        if(curValIndex != nums.size() - 1) {
+
+            int lastIndex = nums.size() - 1;
+            int lastElement = nums.back();
+            nums[curValIndex] = nums[lastIndex];
+            m[lastElement].erase(lastIndex);
+            m[lastElement].insert(curValIndex);
+        }
+
+        
+        nums.pop_back();
+        return true;
+    }
+ */
