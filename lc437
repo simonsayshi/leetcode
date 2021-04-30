@@ -1,0 +1,27 @@
+class Solution {
+public:
+    int pathSum(TreeNode* root, int sum) {
+        dfs(root, sum);
+        return find;
+    }
+    void dfs(TreeNode*root, int sum){
+     if(!root)
+            return ;
+        helper(root, sum);
+        pathSum(root->left,sum);
+        pathSum(root->right,sum);
+        return ;
+    }
+    void helper(TreeNode* root ,int sum){
+        if(!root)
+            return;
+
+        if(root->val == sum)
+            find++;
+        helper(root->left, sum - root->val);
+        helper(root->right,sum - root->val);
+        return;
+    }
+private:
+    int find = 0;
+};
