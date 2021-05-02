@@ -1,0 +1,22 @@
+ */
+class Solution {
+public:
+    int longestUnivaluePath(TreeNode* root) {
+        int maxPath = 0;
+        if(!root)
+            return 0;
+        helper(root, maxPath, root->val);
+        return maxPath;
+    }
+    
+    int helper(TreeNode* root, int&maxPath, int preVal) {
+        if(!root)
+            return 0;
+        
+        int left = helper(root->left, maxPath, root->val);
+        int right = helper(root->right, maxPath, root->val);
+        maxPath = max(maxPath, left + right );
+        return root->val == preVal ? max(left, right) + 1 : 0;
+        }
+
+};
