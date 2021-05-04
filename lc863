@@ -1,0 +1,61 @@
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+ * };
+ */
+class Solution {
+public:
+    vector<int> distanceK(TreeNode* root, TreeNode* target, int K) {
+        unordered_map<TreeNode*, vector<TreeNode*>> m;
+        unordered_set<TreeNode*> visited;
+        
+        constructGraph(root, NULL,m);
+        
+        queue<TreeNode*> q;
+        q.push(target);
+        visited.insert(target);
+        
+        vector<int> res;
+        while(!q.empty()) {
+            if(K == 0) {
+                int size = q.size();
+                for(int i = 0; i <size;i++) {
+                    TreeNode* front = q.front();
+                    q.pop();
+                    res.push_back(front->val);
+                }    
+                return res;
+            }
+            int size = q.size();
+            for(int i = 0;i < size;i++) {
+                TreeNode* temp = q.front();
+                q.pop();
+                for(auto node:m[temp]) {
+                    if(visited.count(node))
+                        continue;
+                    q.push(node);
+                    visited.insert(node);
+                }
+            }
+            K--;
+        }
+        return res;
+    }
+    
+    void constructGraph(TreeNode* root, TreeNode* pre,unordered_map<TreeNode*, vector<TreeNode*>>&m ) {
+        if(!root) {
+            return;
+        }
+        if(pre) {
+            m[root].push_back(pre);
+            m[pre].push_back(root);
+        }
+        constructGraph(root->left, root,m);
+        constructGraph(root->right, root,m);
+        return;
+    }
+};
