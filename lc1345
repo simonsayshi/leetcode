@@ -1,0 +1,48 @@
+class Solution {
+public:
+    int minJumps(vector<int>& arr) {
+        int res = 0;
+        unordered_map<int, unordered_set<int>> m;
+        unordered_set<int> visited;
+        queue<int> q;
+        
+        for(int i = 0; i < arr.size();i++) {
+            m[arr[i]].insert(i);
+        }
+        
+        
+        q.push(0);
+        visited.insert(0);
+        
+        while(!q.empty()) {
+            
+            int size = q.size();
+            for(int i = 0; i < size;i++) {
+                int tempIndx = q.front();
+                q.pop();
+                if(tempIndx == arr.size() - 1)
+                    return res;
+                int leftIndex = tempIndx - 1;
+                int rightIndx = tempIndx + 1;
+                if(leftIndex >= 0 && !visited.count(leftIndex)) {
+                    visited.insert(leftIndex);
+                    q.push(leftIndex);
+                }
+                if(rightIndx < arr.size() && !visited.count(rightIndx)) {
+                    visited.insert(rightIndx);
+                    q.push(rightIndx);
+                }
+                for(auto a:m[arr[tempIndx]]) {
+                    if(!visited.count(a) && a != tempIndx) {
+                        visited.insert(a);
+                        q.push(a);
+                    }
+                }
+                m.erase(arr[tempIndx]);
+                
+            }
+            res++;
+        }
+        return arr.size() - 1;
+    }
+};
